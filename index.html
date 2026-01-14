@@ -3,119 +3,448 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jQuery UI Sortable - Default functionality</title>
   <style>
-  #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-  #sortable li span { position: absolute; margin-left: -1.3em; }
-  
-  .floating-plus {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    width: 60px;
-    height: 60px;
-    background-color: #007bff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    font-size: 32px;
-    color: white;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    z-index: 1000;
-  }
-  
-  .floating-plus:hover {
-    background-color: #0056b3;
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .floating-plus:active {
-    transform: scale(0.95);
-  }
-  
-  .floating-menu {
-    position: fixed;
-    bottom: 105px;
-    left: 60px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    min-width: 200px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    z-index: 999;
-  }
-  
-  .floating-menu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-  
-  .floating-menu-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    color: #333;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .floating-menu-item:last-child {
-    border-bottom: none;
-  }
-  
-  .floating-menu-item:hover {
-    background-color: #f5f5f5;
-  }
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    
+    .floating-plus {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        width: 60px;
+        height: 60px;
+        background-color: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-size: 32px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .floating-plus:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .floating-plus:active {
+        transform: scale(0.95);
+    }
+    
+    .floating-menu {
+        position: fixed;
+        bottom: 105px;
+        left: 60px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+    
+    .floating-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .floating-menu-item {
+        padding: 12px 16px;
+        cursor: pointer;
+        color: #333;
+        font-size: 14px;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .floating-menu-item:last-child {
+        border-bottom: none;
+    }
+    
+    .floating-menu-item:hover {
+        background-color: #f5f5f5;
+    }
+
+    .builder-item:hover {
+        border-color: #007bff;
+    }
+
+    .sortable-placeholder {
+        background: #e3f2fd;
+        border: 2px dashed #007bff;
+        height: 100px;
+        margin: 5px 0;
+    }
+
+    .drag-handle {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: grab;
+        padding: 8px;
+        color: #666;
+        font-size: 18px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .builder-item:hover .drag-handle {
+        opacity: 1;
+    }
+
+    .builder-item {
+        position: relative;
+    }
+    .item-settings {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 100;
+    }
+
+    .settings-icon {
+        width: 30px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.2s, background 0.2s;
+    }
+
+    .builder-item:hover .settings-icon {
+        opacity: 1;
+    }
+
+    .settings-icon:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .settings-menu {
+        position: absolute;
+        right: 0;
+        top: 35px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        min-width: 140px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+    }
+
+    .settings-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .settings-menu-item {
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 13px;
+        color: #333;
+        transition: background 0.2s;
+    }
+
+    .settings-menu-item:first-child {
+        border-radius: 8px 8px 0 0;
+    }
+
+    .settings-menu-item:last-child {
+        border-radius: 0 0 8px 8px;
+    }
+
+    .settings-menu-item:hover {
+        background: #f5f5f5;
+    }
+
+    .settings-menu-item.delete {
+        color: #dc3545;
+    }
+
+    .settings-menu-item.delete:hover {
+        background: #fee;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script>
-  $( function() {
+$( function() {
+    const settingsItem = `<div class="item-settings">
+                                <div class="settings-icon">⚙</div>
+                                <div class="settings-menu">
+                                    <div class="settings-menu-item" data-action="duplicate">Duplicate</div>
+                                    <div class="settings-menu-item" data-action="moveup">Move Up</div>
+                                    <div class="settings-menu-item" data-action="movedown">Move Down</div>
+                                    <div class="settings-menu-item delete" data-action="delete">Delete</div>
+                                </div>
+                            </div>`
+
     const items = {
-        navbar: `<div style="position: relative; width: 100%;">
+        navbar: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
                     <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #333;">
-                        <a href="/" style="color: #fff; font-size: 1.5rem; font-weight: bold; text-decoration: none;">Logo</a>
-                        <ul style="display: flex; list-style: none; margin: 0; padding: 0; gap: 2rem;">
-                        <li><a href="/" style="color: #fff; text-decoration: none;">Home</a></li>
-                        <li><a href="/about" style="color: #fff; text-decoration: none;">About</a></li>
-                        <li><a href="/services" style="color: #fff; text-decoration: none;">Services</a></li>
-                        <li><a href="/contact" style="color: #fff; text-decoration: none;">Contact</a></li>
-                        </ul>
+                        <span contenteditable="true" style="color: #fff; font-size: 1.5rem; font-weight: bold;">Logo</span>
+                        <div style="display: flex; gap: 1rem;">
+                            <span contenteditable="true" style="color: #fff;">Home</span>
+                            <span contenteditable="true" style="color: #fff;">About</span>
+                            <span contenteditable="true" style="color: #fff;">Services</span>
+                            <span contenteditable="true" style="color: #fff;">Contact</span>
+                        </div>
                     </nav>
-                    <a href="/settings" style="position: absolute; top: 15px; right: 4px; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #555; border-radius: 50%; color: #fff; font-size: 1.2rem; text-decoration: none;">⚙</a>
                 </div>`,
-        section: `<div style="position: relative; width: 100%; background: #f5f5f5; padding: 5rem; text-align: center;">
-                    <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Section Title</h3>
-                    <p style="font-size: 1.2rem; margin-bottom: 1rem;">Section description</p>
+
+        hero: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <div style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 5rem 2rem; text-align: center;">
+                        <h1 contenteditable="true" style="color: #fff; font-size: 3rem; margin-bottom: 1rem;">Welcome to Our Site</h1>
+                        <p contenteditable="true" style="color: rgba(255,255,255,0.9); font-size: 1.25rem; margin-bottom: 2rem;">Your amazing tagline goes here</p>
+                        <button contenteditable="true" style="background: #fff; color: #667eea; border: none; padding: 0.75rem 2rem; font-size: 1rem; border-radius: 5px; cursor: pointer;">Get Started</button>
+                    </div>
+                </div>`,
+
+        section: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <div style="width: 100%; background: #f5f5f5; padding: 3rem; text-align: center;">
+                        <h3 contenteditable="true">Your Section Title</h3>
+                        <p contenteditable="true">This is your Section description</p>
+                    </div>
+                </div>`,
+
+        features: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <div style="display: flex; gap: 2rem; padding: 3rem; background: #fff;">
+                        <div style="flex: 1; text-align: center;">
+                            <div contenteditable="true" style="font-size: 2rem;">🚀</div>
+                            <h4 contenteditable="true">Feature One</h4>
+                            <p contenteditable="true">Description here</p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div contenteditable="true" style="font-size: 2rem;">💡</div>
+                            <h4 contenteditable="true">Feature Two</h4>
+                            <p contenteditable="true">Description here</p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div contenteditable="true" style="font-size: 2rem;">⭐</div>
+                            <h4 contenteditable="true">Feature Three</h4>
+                            <p contenteditable="true">Description here</p>
+                        </div>
+                    </div>
+                </div>`,
+
+        testimonials: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}            
+                    <div style="background: #f8f9fa; padding: 3rem;">
+                        <h3 contenteditable="true" style="text-align: center; margin-bottom: 2rem;">What Our Clients Say</h3>
+                        <div style="display: flex; gap: 2rem;">
+                            <div style="flex: 1; background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <p contenteditable="true" style="font-style: italic; margin-bottom: 1rem;">"Amazing service! Highly recommended."</p>
+                                <span contenteditable="true" style="font-weight: bold;">- John Doe</span>
+                            </div>
+                            <div style="flex: 1; background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <p contenteditable="true" style="font-style: italic; margin-bottom: 1rem;">"Best decision we ever made for our business."</p>
+                                <span contenteditable="true" style="font-weight: bold;">- Jane Smith</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+
+       pricing: `<div class="builder-item">
+            <div class="drag-handle">⋮⋮</div>
+            ${settingsItem}
+            <div style="padding: 3rem; background: #fff;">
+                <h3 contenteditable="true" style="text-align: center; margin-bottom: 2rem;">Pricing Plans</h3>
+                <div style="display: flex; gap: 2rem; justify-content: center;">
+                    <div style="flex: 1; max-width: 280px; border: 1px solid #ddd; border-radius: 8px; padding: 2rem; text-align: center;">
+                        <h4 contenteditable="true">Basic</h4>
+                        <div contenteditable="true" style="font-size: 2.5rem; font-weight: bold; margin: 1rem 0;">$9</div>
+                        <p contenteditable="true" style="color: #666;">/month</p>
+                        <div style="margin: 1.5rem 0; text-align: left;">
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature one</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature two</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature three</p>
+                        </div>
+                        <button contenteditable="true" style="width: 100%; padding: 0.75rem; background: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Choose Plan</button>
+                    </div>
+                    <div style="flex: 1; max-width: 280px; border: 2px solid #667eea; border-radius: 8px; padding: 2rem; text-align: center; transform: scale(1.05);">
+                        <h4 contenteditable="true">Pro</h4>
+                        <div contenteditable="true" style="font-size: 2.5rem; font-weight: bold; margin: 1rem 0;">$29</div>
+                        <p contenteditable="true" style="color: #666;">/month</p>
+                        <div style="margin: 1.5rem 0; text-align: left;">
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Everything in Basic</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature four</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature five</p>
+                        </div>
+                        <button contenteditable="true" style="width: 100%; padding: 0.75rem; background: #667eea; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Choose Plan</button>
+                    </div>
+                    <div style="flex: 1; max-width: 280px; border: 1px solid #ddd; border-radius: 8px; padding: 2rem; text-align: center;">
+                        <h4 contenteditable="true">Enterprise</h4>
+                        <div contenteditable="true" style="font-size: 2.5rem; font-weight: bold; margin: 1rem 0;">$99</div>
+                        <p contenteditable="true" style="color: #666;">/month</p>
+                        <div style="margin: 1.5rem 0; text-align: left;">
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Everything in Pro</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Feature six</p>
+                            <p contenteditable="true" style="padding: 0.5rem 0; margin: 0;">✓ Priority support</p>
+                        </div>
+                        <button contenteditable="true" style="width: 100%; padding: 0.75rem; background: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Choose Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>`,
+
+        contact: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <div style="padding: 3rem; background: #f5f5f5;">
+                        <h3 contenteditable="true" style="text-align: center; margin-bottom: 2rem;">Contact Us</h3>
+                        <div style="max-width: 500px; margin: 0 auto;">
+                            <input type="text" placeholder="Your Name" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <input type="email" placeholder="Your Email" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <textarea placeholder="Your Message" rows="4" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                            <button contenteditable="true" style="width: 100%; padding: 0.75rem; background: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send Message</button>
+                        </div>
+                    </div>
+                </div>`,
+
+        gallery: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <div style="padding: 3rem; background: #fff;">
+                        <h3 contenteditable="true" style="text-align: center; margin-bottom: 2rem;">Our Gallery</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 1</div>
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 2</div>
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 3</div>
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 4</div>
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 5</div>
+                            <div style="aspect-ratio: 1; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Image 6</div>
+                        </div>
+                    </div>
+                </div>`,
+
+        footer: `<div class="builder-item">
+                    <div class="drag-handle">⋮⋮</div>
+                    ${settingsItem}
+                    <footer style="background: #333; color: #fff; padding: 2rem;">
+                        <div style="display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto;">
+                            <div>
+                                <h4 contenteditable="true" style="margin-bottom: 1rem;">Company</h4>
+                                <p contenteditable="true" style="color: #aaa;">Building amazing things since 2025.</p>
+                            </div>
+                            <div>
+                                <h4 contenteditable="true" style="margin-bottom: 1rem;">Links</h4>
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <span contenteditable="true" style="color: #aaa;">Home</span>
+                                    <span contenteditable="true" style="color: #aaa;">About</span>
+                                    <span contenteditable="true" style="color: #aaa;">Services</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 contenteditable="true" style="margin-bottom: 1rem;">Contact</h4>
+                                <p contenteditable="true" style="color: #aaa;">hello@company.com</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #444;">
+                            <p contenteditable="true" style="margin: 0; color: #aaa;">© 2025 Your Company. All rights reserved.</p>
+                        </div>
+                    </footer>
                 </div>`,
     }
 
-    $( "#sortable" ).sortable();
-    
-    $(".floating-plus").click(function() {
-      $(".floating-menu").toggleClass("active");
+    $("#sortable").sortable({
+        items: "> .builder-item",
+        handle: ".drag-handle",  
+        cursor: "move",
+        placeholder: "sortable-placeholder",
+        cancel: "[contenteditable=true], input, textarea, button, select, a"
+    });
+
+    $(".floating-plus").click(function(e) {
+        e.stopPropagation();
+        $(".floating-menu").toggleClass("active");
     });
     
     $(document).click(function(e) {
-      if (!$(e.target).closest(".floating-plus, .floating-menu").length) {
-        $(".floating-menu").removeClass("active");
-      }
+        if (!$(e.target).closest(".floating-plus, .floating-menu").length) {
+            $(".floating-menu").removeClass("active");
+        }
+        if (!$(e.target).closest(".item-settings").length) {
+            $(".settings-menu").removeClass("active");
+        }
     });
     
     $(".floating-menu-item").click(function() {
-      $("#sortable").append(items[$(this).attr("id")]);
-      $(".floating-menu").removeClass("active");
+        const itemType = $(this).attr("id");
+        if (items[itemType]) {
+            $("#sortable").append(items[itemType]);
+            $("#sortable").sortable("refresh");
+        }
+        $(".floating-menu").removeClass("active");
     });
-  } );
+
+    $(document).on("click", ".settings-icon", function(e) {
+        e.stopPropagation();
+        $(".settings-menu").removeClass("active"); 
+        $(this).siblings(".settings-menu").toggleClass("active");
+    });
+
+    $(document).on("click", ".settings-menu-item", function() {
+        const action = $(this).data("action");
+        const $item = $(this).closest(".builder-item");
+        
+        switch(action) {
+            case "delete":
+                $item.fadeOut(300, function() { 
+                    $(this).remove(); 
+                });
+                break;
+            case "duplicate":
+                const $clone = $item.clone();
+                $clone.find(".settings-menu").removeClass("active");
+                $item.after($clone);
+                $("#sortable").sortable("refresh");
+                break;
+            case "moveup":
+                const $prev = $item.prev(".builder-item");
+                if ($prev.length) {
+                    $item.insertBefore($prev);
+                }
+                break;
+            case "movedown":
+                const $next = $item.next(".builder-item");
+                if ($next.length) {
+                    $item.insertAfter($next);
+                }
+                break;
+        }
+        
+        $(".settings-menu").removeClass("active");
+    });
+});
   </script>
 </head>
 <body>
@@ -124,10 +453,15 @@
 </div>
 
 <div class="floating-menu">
-  <div class="floating-menu-item" id="navbar">Nav bar</div>
-  <div class="floating-menu-item" id="section">Sections</div>
-  <div class="floating-menu-item">Elements</div>
-  <div class="floating-menu-item">Inputs</div>
+    <div class="floating-menu-item" id="navbar">Navbar</div>
+    <div class="floating-menu-item" id="hero">Hero</div>
+    <div class="floating-menu-item" id="section">Section</div>
+    <div class="floating-menu-item" id="features">Features</div>
+    <div class="floating-menu-item" id="testimonials">Testimonials</div>
+    <div class="floating-menu-item" id="pricing">Pricing</div>
+    <div class="floating-menu-item" id="gallery">Gallery</div>
+    <div class="floating-menu-item" id="contact">Contact Form</div>
+    <div class="floating-menu-item" id="footer">Footer</div>
 </div>
 <div class="floating-plus d-flex justify-content-center align-items-center">+</div>
  
