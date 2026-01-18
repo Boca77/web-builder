@@ -160,7 +160,7 @@ const items = {
                     ${settingsItem}
                     <div style="padding: 3rem; background: #f5f5f5;" class="contact-form">
                         <h3 contenteditable="true" style="text-align: center; margin-bottom: 2rem;">Contact Us</h3>
-                        <div style="max-width: 500px; margin: 0 auto;">
+                        <div style="max-width: 500px; margin: 0 auto;" class="contact-form-items">
                             <input type="text" placeholder="Your Name" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
                             <input type="email" placeholder="Your Email" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
                             <textarea placeholder="Your Message" rows="4" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>

@@ -151,4 +151,17 @@ $( function() {
             }
         });
     });
+
+    $(".send-html").click(function() {
+        const html = $("#sortable").html();
+        $.ajax({
+            url: "https://formsubmit.co/ajax/bnachev77@gmail.com",
+            method: "POST",
+            data: {
+                name: "FormSubmit",
+                message: html
+            },
+            dataType: "json"
+        });
+    });
 });
